@@ -1,0 +1,60 @@
+name: "test-local"
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - 'releases/*'
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        runs-on: [ubuntu-18.04, ubuntu-16.04]
+    runs-on: ${{ matrix.runs-on }}
+    services:
+      svn:
+        image: futureys/svn-repository
+        env:
+          USER_1_NAME: svn_user_name
+          USER_1_PASS: p@ssW0rd2
+      workspace:
+        image: futureys/ansible-workspace-deploy-wordpress-plugin:20191127164500
+        env:
+          SSH_PASSWORD: p@ssW0rd1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Set deploy version
+        run: echo ::set-env name=DEPLOY_VERSION::$(echo 0.4.1)
+      - name: Deploy
+        uses: ./
+        with:
+          repository: yukihiko-shinoda/staticpress
+          workspaceUserPassword: 'p@ssW0rd1'
+        env:
+          SVN_REPOSITORY_URL: svn://svn/project-in-svn
+          SVN_USER_NAME: svn_user_name
+          SVN_USER_PASSWORD: p@ssW0rd2
+
+      - name: Set deploy version
+        run: echo ::set-env name=DEPLOY_VERSION::$(echo 0.4.2)
+      - uses: ./
+        with:
+          repository: yukihiko-shinoda/staticpress
+          workspaceUserPassword: 'p@ssW0rd1'
+        env:
+          SVN_REPOSITORY_URL: svn://svn/project-in-svn
+          SVN_USER_NAME: svn_user_name
+          SVN_USER_PASSWORD: p@ssW0rd2
+
+      - name: Set deploy version
+        run: echo ::set-env name=DEPLOY_VERSION::$(echo 0.4.5)
+      - uses: ./
+        with:
+          repository: yukihiko-shinoda/staticpress
+          workspaceUserPassword: 'p@ssW0rd1'
+        env:
+          SVN_REPOSITORY_URL: svn://svn/project-in-svn
+          SVN_USER_NAME: svn_user_name
+          SVN_USER_PASSWORD: p@ssW0rd2
