@@ -1,9 +1,9 @@
-![](https://github.com/yukihiko-shinoda/action-deploy-wordpress-plugin/workflows/test-local/badge.svg)
-![](https://img.shields.io/docker/cloud/automated/futureys/deploy-wordpress-plugin.svg)
-![](https://img.shields.io/docker/cloud/build/futureys/deploy-wordpress-plugin.svg)
-![](https://images.microbadger.com/badges/image/futureys/deploy-wordpress-plugin.svg)
-
 # Deploy WordPress plugin
+
+[![test-local](https://github.com/yukihiko-shinoda/action-deploy-wordpress-plugin/workflows/test-local/badge.svg)](https://github.com/yukihiko-shinoda/action-deploy-wordpress-plugin/actions?query=workflow%3Atest-local)
+[![docker buikd automated?](https://img.shields.io/docker/cloud/automated/futureys/deploy-wordpress-plugin.svg)](https://hub.docker.com/r/futureys/deploy-wordpress-plugin/builds)
+[![docker build passing](https://img.shields.io/docker/cloud/build/futureys/deploy-wordpress-plugin.svg)](https://hub.docker.com/r/futureys/deploy-wordpress-plugin/builds)
+[![image size and number of layers](https://images.microbadger.com/badges/image/futureys/deploy-wordpress-plugin.svg)](https://hub.docker.com/r/futureys/deploy-wordpress-plugin/dockerfile)
 
 This is deployment action for WordPress Plugin
 from public Git repository to SubVersion on WordPress.org.
@@ -25,9 +25,20 @@ from public Git repository to SubVersion on WordPress.org.
 
 ## excluding strategy
 
-When rsync, rsync will read [.rsync-filter file](https://github.com/yukihiko-shinoda/dockerfile-deploy-wordpress-plugin/blob/master/runner/project/roles/deploy-wordpress-plugin/templates/.rsync-filter.j2).
+The process executes rsync from Git working tree to SubVersion working tree with ```.rsync-filter```.
 
-# Usage
+### default behavior
+
+rsync will read [default .rsync-filter file](https://github.com/yukihiko-shinoda/dockerfile-deploy-wordpress-plugin/blob/master/runner/project/roles/deploy-wordpress-plugin/templates/.rsync-filter.j2).
+
+### customizing behavior
+
+If ```.rsync-filter``` file is exist on the root of Git working tree, rsync will read it. The most primitive how to write it is to list up files and directories you want to exclude. For more details, following contents will be helpful.
+
+- [linux - Using Rsync filter to include/exclude files - Stack Overflow](https://stackoverflow.com/questions/35364075/using-rsync-filter-to-include-exclude-files)
+- [rsync(1) - Linux man page](https://linux.die.net/man/1/rsync)
+
+## Usage
 
 The code example is given first and some key points are explained later.
 
@@ -57,7 +68,7 @@ jobs:
         run: echo ::set-env name=DEPLOY_VERSION::$(echo ${GITHUB_REF#refs/tags/})
       # 5. Use action with ssh password for workspace and environment varialble set by secrets
       - name: Deploy
-        uses: yukihiko-shinoda/action-deploy-wordpress-plugin@v1.0.0
+        uses: yukihiko-shinoda/action-deploy-wordpress-plugin@v1.1.0
         with:
           workspaceUserPassword: 'p@ssW0rd'
         env:

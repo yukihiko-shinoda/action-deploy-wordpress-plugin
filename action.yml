@@ -1,5 +1,5 @@
 name: 'Deploy WordPress plugin'
-description: 'Deploy WordPress plugin into SVN repository on WordPress.org'
+description: 'Deploy WordPress plugin into SVN repository on WordPress.org powered by maintainable Python tested by pytest'
 inputs:
   workspaceServiceName:
     description: 'Service name for workspace'
@@ -18,7 +18,7 @@ inputs:
     default: ${{ github.repository }}
 runs:
   using: 'docker'
-  image: 'docker://futureys/deploy-wordpress-plugin:1.0.0'
+  image: 'docker://futureys/deploy-wordpress-plugin:1.1.0'
   env:
     ANSIBLE_SSH_HOST: ${{ inputs.workspaceServiceName }}
     ANSIBLE_SSH_USER: ${{ inputs.workspaceUserName }}
