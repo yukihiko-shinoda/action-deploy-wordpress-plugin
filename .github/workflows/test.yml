@@ -19,6 +19,9 @@ jobs:
           USER_1_NAME: svn_user_name
           USER_1_PASS: p@ssW0rd
     steps:
+      - name: Set deploy version
+        run: echo ::set-env name=EXPECT_DEPLOY_VERSION::$(echo ${GITHUB_REF#refs/tags/})
+
       - name: Checkout project
         uses: actions/checkout@v2
         with:
@@ -28,18 +31,15 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: ./.github/actions/deploy
-      - name: Back up environment variable
-        run: echo ::set-env name=BACKUP_GITHUB_REF::$(echo "${GITHUB_REF}")
-      - name: Overwrite deploy version
-        run: echo ::set-env name=GITHUB_REF::$(echo refs/tags/0.4.1)
       - name: Deploy
         uses: ./.github/actions/deploy/
+        with:
+          expect-deploy-version-for-test: ${{ env.EXPECT_DEPLOY_VERSION }}
+          deploy-version-for-test: '0.4.1'
         env:
           SVN_REPOSITORY_URL: svn://svn/project-in-svn
           SVN_USER_NAME: svn_user_name
           SVN_USER_PASSWORD: p@ssW0rd
-      - name: Restore environment variable
-        run: echo ::set-env name=GITHUB_REF::$(echo "${BACKUP_GITHUB_REF}")
 
       - name: Checkout project
         uses: actions/checkout@v2
@@ -50,18 +50,15 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: ./.github/actions/deploy
-      - name: Back up environment variable
-        run: echo ::set-env name=BACKUP_GITHUB_REF::$(echo "${GITHUB_REF}")
-      - name: Overwrite deploy version
-        run: echo ::set-env name=GITHUB_REF::$(echo refs/tags/0.4.2)
       - name: Deploy
         uses: ./.github/actions/deploy/
+        with:
+          expect-deploy-version-for-test: ${{ env.EXPECT_DEPLOY_VERSION }}
+          deploy-version-for-test: '0.4.2'
         env:
           SVN_REPOSITORY_URL: svn://svn/project-in-svn
           SVN_USER_NAME: svn_user_name
           SVN_USER_PASSWORD: p@ssW0rd
-      - name: Restore environment variable
-        run: echo ::set-env name=GITHUB_REF::$(echo "${BACKUP_GITHUB_REF}")
 
       - name: Checkout project
         uses: actions/checkout@v2
@@ -72,15 +69,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: ./.github/actions/deploy
-      - name: Back up environment variable
-        run: echo ::set-env name=BACKUP_GITHUB_REF::$(echo "${GITHUB_REF}")
-      - name: Overwrite deploy version
-        run: echo ::set-env name=GITHUB_REF::$(echo refs/tags/0.4.5)
       - name: Deploy
         uses: ./.github/actions/deploy/
+        with:
+          expect-deploy-version-for-test: ${{ env.EXPECT_DEPLOY_VERSION }}
+          deploy-version-for-test: '0.4.5'
         env:
           SVN_REPOSITORY_URL: svn://svn/project-in-svn
           SVN_USER_NAME: svn_user_name
           SVN_USER_PASSWORD: p@ssW0rd
-      - name: Restore environment variable
-        run: echo ::set-env name=GITHUB_REF::$(echo "${BACKUP_GITHUB_REF}")
