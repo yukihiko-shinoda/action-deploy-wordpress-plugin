@@ -1,4 +1,4 @@
-name: "test-local"
+name: Test
 on:
   pull_request:
   push:
@@ -19,16 +19,15 @@ jobs:
           USER_1_NAME: svn_user_name
           USER_1_PASS: p@ssW0rd
     steps:
-      - name: Checkout action
-        uses: actions/checkout@v2
-        with:
-          path: ./.github/actions/deploy
-
       - name: Checkout project
         uses: actions/checkout@v2
         with:
           repository: yukihiko-shinoda/staticpress
           ref: '0.4.1'
+      - name: Checkout action
+        uses: actions/checkout@v2
+        with:
+          path: ./.github/actions/deploy
       - name: Back up environment variable
         run: echo ::set-env name=BACKUP_GITHUB_REF::$(echo "${GITHUB_REF}")
       - name: Overwrite deploy version
@@ -47,6 +46,10 @@ jobs:
         with:
           repository: yukihiko-shinoda/staticpress
           ref: '0.4.2'
+      - name: Checkout action
+        uses: actions/checkout@v2
+        with:
+          path: ./.github/actions/deploy
       - name: Back up environment variable
         run: echo ::set-env name=BACKUP_GITHUB_REF::$(echo "${GITHUB_REF}")
       - name: Overwrite deploy version
@@ -65,6 +68,10 @@ jobs:
         with:
           repository: yukihiko-shinoda/staticpress
           ref: '0.4.5'
+      - name: Checkout action
+        uses: actions/checkout@v2
+        with:
+          path: ./.github/actions/deploy
       - name: Back up environment variable
         run: echo ::set-env name=BACKUP_GITHUB_REF::$(echo "${GITHUB_REF}")
       - name: Overwrite deploy version

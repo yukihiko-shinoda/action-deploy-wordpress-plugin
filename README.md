@@ -1,6 +1,6 @@
 # Deploy WordPress plugin
 
-[![test-local](https://github.com/yukihiko-shinoda/action-deploy-wordpress-plugin/workflows/test-local/badge.svg)](https://github.com/yukihiko-shinoda/action-deploy-wordpress-plugin/actions?query=workflow%3Atest-local)
+[![Test](https://github.com/yukihiko-shinoda/action-deploy-wordpress-plugin/workflows/test-local/badge.svg)](https://github.com/yukihiko-shinoda/action-deploy-wordpress-plugin/actions?query=workflow%3Atest-local)
 [![docker buikd automated?](https://img.shields.io/docker/cloud/automated/futureys/deploy-wordpress-plugin.svg)](https://hub.docker.com/r/futureys/deploy-wordpress-plugin/builds)
 [![docker build passing](https://img.shields.io/docker/cloud/build/futureys/deploy-wordpress-plugin.svg)](https://hub.docker.com/r/futureys/deploy-wordpress-plugin/builds)
 [![image size and number of layers](https://images.microbadger.com/badges/image/futureys/deploy-wordpress-plugin.svg)](https://hub.docker.com/r/futureys/deploy-wordpress-plugin/dockerfile)
