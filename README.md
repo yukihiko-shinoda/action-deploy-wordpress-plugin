@@ -4,6 +4,7 @@
 [![docker buikd automated?](https://img.shields.io/docker/cloud/automated/futureys/deploy-wordpress-plugin.svg)](https://hub.docker.com/r/futureys/deploy-wordpress-plugin/builds)
 [![docker build passing](https://img.shields.io/docker/cloud/build/futureys/deploy-wordpress-plugin.svg)](https://hub.docker.com/r/futureys/deploy-wordpress-plugin/builds)
 [![image size and number of layers](https://images.microbadger.com/badges/image/futureys/deploy-wordpress-plugin.svg)](https://hub.docker.com/r/futureys/deploy-wordpress-plugin/dockerfile)
+[![Tweet](https://img.shields.io/twitter/url?url=https%3A%2F%2Fgithub.com%2Fyukihiko-shinoda%2Faction-deploy-wordpress-plugin)](http://twitter.com/share?text=Deploy%20WordPress%20plugin&url=https://github.com/marketplace/actions/deploy-wordpress-plugin&hashtags=wordpress)
 
 This is deployment action for WordPress Plugin
 from public Git repository to SubVersion on WordPress.org.
@@ -55,7 +56,10 @@ jobs:
     # 2. Specify Linux runner
     runs-on: ubuntu-18.04
     steps:
-      # 3. Use action with ssh password for workspace and environment varialble set by secrets
+      # 3. Checkout before Use this deployment action
+      - name: Checkout
+        uses: actions/checkout@v2
+      # 4. Use action with ssh password for workspace and environment varialble set by secrets
       - name: Deploy
         uses: yukihiko-shinoda/action-deploy-wordpress-plugin@v2.0.0
         env:
@@ -75,6 +79,10 @@ If you prefer, you can use [filter pattern](https://help.github.com/en/actions/a
 We recommends Linux runner. Windows and Mac also may use this action,
 however we are not running test on there environment to save running cost now.
 
-### 3. Use action with ssh password for workspace and environment varialble set by secrets
+### 3. Checkout before Use this deployment action
+
+This deployment action assumes that the Git repository has been checked out.
+
+### 4. Use action with ssh password for workspace and environment varialble set by secrets
 
 In this example, environment variables are [presented by secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets). At least, you'd better to use secret for ```SVN_USER_NAME``` and ```SVN_USER_PASSWORD```.
