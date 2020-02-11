@@ -1,6 +1,6 @@
 # Deploy WordPress plugin
 
-[![test-local](https://github.com/yukihiko-shinoda/action-deploy-wordpress-plugin/workflows/test-local/badge.svg)](https://github.com/yukihiko-shinoda/action-deploy-wordpress-plugin/actions?query=workflow%3Atest-local)
+[![Test](https://github.com/yukihiko-shinoda/action-deploy-wordpress-plugin/workflows/Test/badge.svg)](https://github.com/yukihiko-shinoda/action-deploy-wordpress-plugin/actions?query=workflow%3ATest)
 [![docker buikd automated?](https://img.shields.io/docker/cloud/automated/futureys/deploy-wordpress-plugin.svg)](https://hub.docker.com/r/futureys/deploy-wordpress-plugin/builds)
 [![docker build passing](https://img.shields.io/docker/cloud/build/futureys/deploy-wordpress-plugin.svg)](https://hub.docker.com/r/futureys/deploy-wordpress-plugin/builds)
 [![image size and number of layers](https://images.microbadger.com/badges/image/futureys/deploy-wordpress-plugin.svg)](https://hub.docker.com/r/futureys/deploy-wordpress-plugin/dockerfile)
@@ -10,10 +10,8 @@ from public Git repository to SubVersion on WordPress.org.
 
 ## requirement
 
-- Source Git repository is public
 - Tagging revision on Git is done before deploy into WordPress.org
 - Tag name of revision on source Git repository to deploy is the same as version number of plugin’s main PHP file on tagged revision of source Git repository
-- Linux runner only due to GitHub specification when use ```services```.
 
 ## out of scope
 
@@ -56,21 +54,10 @@ jobs:
     name: Deploy WordPress plugin
     # 2. Specify Linux runner
     runs-on: ubuntu-18.04
-    services:
-      # 3. Run workspace service with ssh password as name "workspace"
-      workspace:
-        image: futureys/ansible-workspace-deploy-wordpress-plugin:20191127164500
-        env:
-          SSH_PASSWORD: p@ssW0rd
     steps:
-      # 4. Set environment variable "DEPLOY_VERSION" from tag name
-      - name: Set deploy version
-        run: echo ::set-env name=DEPLOY_VERSION::$(echo ${GITHUB_REF#refs/tags/})
-      # 5. Use action with ssh password for workspace and environment varialble set by secrets
+      # 3. Use action with ssh password for workspace and environment varialble set by secrets
       - name: Deploy
-        uses: yukihiko-shinoda/action-deploy-wordpress-plugin@v1.1.0
-        with:
-          workspaceUserPassword: 'p@ssW0rd'
+        uses: yukihiko-shinoda/action-deploy-wordpress-plugin@v2.0.0
         env:
           SVN_REPOSITORY_URL: ${{ secrets.SvnRepositoryUrl }}
           SVN_USER_NAME: ${{ secrets.SvnUserName }}
@@ -85,20 +72,9 @@ If you prefer, you can use [filter pattern](https://help.github.com/en/actions/a
 
 ### 2. Specify Linux runner
 
-This action works only on Linux runner due to GitHub specification when use ```services```.
+We recommends Linux runner. Windows and Mac also may use this action,
+however we are not running test on there environment to save running cost now.
 
-### 3. Run workspace service with ssh password as name "workspace"
+### 3. Use action with ssh password for workspace and environment varialble set by secrets
 
-This action use workspace container
-which Git, SubVersion, and rsync is installed.
-By default, action will try to ssh to host name "workspace".
-
-### 4. Set environment variable "DEPLOY VERSION" from tag name
-
-This action reads deploy version from environment variable.
-When trigger workflow by pushing tag, ```GITHUB_REF``` will be "refs/tags/tag-name".
-
-### 5. Use action with ssh password for workspace and environment varialble set by secrets
-
-The input ```workspaceUserPassword``` is required to set the same password as the one set to workspace container to ssh.
 In this example, environment variables are [presented by secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets). At least, you'd better to use secret for ```SVN_USER_NAME``` and ```SVN_USER_PASSWORD```.

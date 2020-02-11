@@ -1,4 +1,4 @@
-name: "test-local"
+name: Test
 on:
   pull_request:
   push:
@@ -17,44 +17,64 @@ jobs:
         image: futureys/svn-repository
         env:
           USER_1_NAME: svn_user_name
-          USER_1_PASS: p@ssW0rd2
-      workspace:
-        image: futureys/ansible-workspace-deploy-wordpress-plugin:20191127164500
-        env:
-          SSH_PASSWORD: p@ssW0rd1
+          USER_1_PASS: p@ssW0rd
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
       - name: Set deploy version
-        run: echo ::set-env name=DEPLOY_VERSION::$(echo 0.4.1)
+        run: echo ::set-env name=EXPECT_DEPLOY_VERSION::$(echo ${GITHUB_REF#refs/tags/})
+
+      - name: Checkout project
+        uses: actions/checkout@v2
+        with:
+          repository: yukihiko-shinoda/staticpress
+          ref: '0.4.1'
+      - name: Checkout action
+        uses: actions/checkout@v2
+        with:
+          path: ./.github/actions/deploy
       - name: Deploy
-        uses: ./
+        uses: ./.github/actions/deploy/
         with:
-          repository: yukihiko-shinoda/staticpress
-          workspaceUserPassword: 'p@ssW0rd1'
+          expect-deploy-version-for-test: ${{ env.EXPECT_DEPLOY_VERSION }}
+          deploy-version-for-test: '0.4.1'
         env:
           SVN_REPOSITORY_URL: svn://svn/project-in-svn
           SVN_USER_NAME: svn_user_name
-          SVN_USER_PASSWORD: p@ssW0rd2
+          SVN_USER_PASSWORD: p@ssW0rd
 
-      - name: Set deploy version
-        run: echo ::set-env name=DEPLOY_VERSION::$(echo 0.4.2)
-      - uses: ./
+      - name: Checkout project
+        uses: actions/checkout@v2
         with:
           repository: yukihiko-shinoda/staticpress
-          workspaceUserPassword: 'p@ssW0rd1'
+          ref: '0.4.2'
+      - name: Checkout action
+        uses: actions/checkout@v2
+        with:
+          path: ./.github/actions/deploy
+      - name: Deploy
+        uses: ./.github/actions/deploy/
+        with:
+          expect-deploy-version-for-test: ${{ env.EXPECT_DEPLOY_VERSION }}
+          deploy-version-for-test: '0.4.2'
         env:
           SVN_REPOSITORY_URL: svn://svn/project-in-svn
           SVN_USER_NAME: svn_user_name
-          SVN_USER_PASSWORD: p@ssW0rd2
+          SVN_USER_PASSWORD: p@ssW0rd
 
-      - name: Set deploy version
-        run: echo ::set-env name=DEPLOY_VERSION::$(echo 0.4.5)
-      - uses: ./
+      - name: Checkout project
+        uses: actions/checkout@v2
         with:
           repository: yukihiko-shinoda/staticpress
-          workspaceUserPassword: 'p@ssW0rd1'
+          ref: '0.4.5'
+      - name: Checkout action
+        uses: actions/checkout@v2
+        with:
+          path: ./.github/actions/deploy
+      - name: Deploy
+        uses: ./.github/actions/deploy/
+        with:
+          expect-deploy-version-for-test: ${{ env.EXPECT_DEPLOY_VERSION }}
+          deploy-version-for-test: '0.4.5'
         env:
           SVN_REPOSITORY_URL: svn://svn/project-in-svn
           SVN_USER_NAME: svn_user_name
-          SVN_USER_PASSWORD: p@ssW0rd2
+          SVN_USER_PASSWORD: p@ssW0rd

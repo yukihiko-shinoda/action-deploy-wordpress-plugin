@@ -1,30 +1,18 @@
 name: 'Deploy WordPress plugin'
 description: 'Deploy WordPress plugin into SVN repository on WordPress.org powered by maintainable Python tested by pytest'
-inputs:
-  workspaceServiceName:
-    description: 'Service name for workspace'
-    default: workspace
-  workspaceUserName:
-    description: 'User name for ssh connection to Workspace service'
-    default: root
-  workspaceUserPassword:
-    description: 'User passwrod for ssh connection to Workspace service'
-    required: true
-  workspacePythonInterpreter:
-    description: 'Path to Python interpreter on workspace'
-    default: /usr/local/bin/python
-  repository:
-    description: 'Repository name with owner. For example, actions/checkout'
-    default: ${{ github.repository }}
+inputs: 
+  expect-deploy-version-for-test:
+    description: 'Expect deploy version only for test mode for CI'
+    default: ''
+  deploy-version-for-test:
+    description: 'Deploy version only for test mode for CI'
+    default: ''
 runs:
   using: 'docker'
-  image: 'docker://futureys/deploy-wordpress-plugin:1.1.0'
+  image: 'Dockerfile'
   env:
-    ANSIBLE_SSH_HOST: ${{ inputs.workspaceServiceName }}
-    ANSIBLE_SSH_USER: ${{ inputs.workspaceUserName }}
-    ANSIBLE_SSH_PASS: ${{ inputs.workspaceUserPassword }}
-    ANSIBLE_PYTHON_INTERPRETER: ${{ inputs.workspacePythonInterpreter }}
-    GIT_REPOSITORY_URL: https://github.com/${{ inputs.repository }}.git
+    EXPECT_DEPLOY_VERSION_FOR_TEST: ${{ inputs.expect-deploy-version-for-test }}
+    DEPLOY_VERSION_FOR_TEST: ${{ inputs.deploy-version-for-test }}
 branding:
   icon: 'upload-cloud'
   color: 'blue'
