@@ -17,44 +17,60 @@ jobs:
         image: futureys/svn-repository
         env:
           USER_1_NAME: svn_user_name
-          USER_1_PASS: p@ssW0rd2
-      workspace:
-        image: futureys/ansible-workspace-deploy-wordpress-plugin:20191127164500
-        env:
-          SSH_PASSWORD: p@ssW0rd1
+          USER_1_PASS: p@ssW0rd
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Set deploy version
-        run: echo ::set-env name=DEPLOY_VERSION::$(echo 0.4.1)
+      - name: Checkout action
+        uses: actions/checkout@v2
+        with:
+          path: ./.github/actions/deploy
+
+      - name: Checkout project
+        uses: actions/checkout@v2
+        repository: yukihiko-shinoda/staticpress
+        ref: '0.4.1'
+      - name: Back up environment variable
+        run: echo ::set-env name=BACKUP_GITHUB_REF::$(echo "${GITHUB_REF}")
+      - name: Overwrite deploy version
+        run: echo ::set-env name=GITHUB_REF::$(echo refs/tags/0.4.1)
       - name: Deploy
-        uses: ./
-        with:
-          repository: yukihiko-shinoda/staticpress
-          workspaceUserPassword: 'p@ssW0rd1'
+        uses: ./.github/actions/deploy/
         env:
           SVN_REPOSITORY_URL: svn://svn/project-in-svn
           SVN_USER_NAME: svn_user_name
-          SVN_USER_PASSWORD: p@ssW0rd2
+          SVN_USER_PASSWORD: p@ssW0rd
+      - name: Restore environment variable
+        run: echo ::set-env name=GITHUB_REF::$(echo "${BACKUP_GITHUB_REF}")
 
-      - name: Set deploy version
-        run: echo ::set-env name=DEPLOY_VERSION::$(echo 0.4.2)
-      - uses: ./
-        with:
-          repository: yukihiko-shinoda/staticpress
-          workspaceUserPassword: 'p@ssW0rd1'
+      - name: Checkout project
+        uses: actions/checkout@v2
+        repository: yukihiko-shinoda/staticpress
+        ref: '0.4.2'
+      - name: Back up environment variable
+        run: echo ::set-env name=BACKUP_GITHUB_REF::$(echo "${GITHUB_REF}")
+      - name: Overwrite deploy version
+        run: echo ::set-env name=GITHUB_REF::$(echo refs/tags/0.4.2)
+      - name: Deploy
+        uses: ./.github/actions/deploy/
         env:
           SVN_REPOSITORY_URL: svn://svn/project-in-svn
           SVN_USER_NAME: svn_user_name
-          SVN_USER_PASSWORD: p@ssW0rd2
+          SVN_USER_PASSWORD: p@ssW0rd
+      - name: Restore environment variable
+        run: echo ::set-env name=GITHUB_REF::$(echo "${BACKUP_GITHUB_REF}")
 
-      - name: Set deploy version
-        run: echo ::set-env name=DEPLOY_VERSION::$(echo 0.4.5)
-      - uses: ./
-        with:
-          repository: yukihiko-shinoda/staticpress
-          workspaceUserPassword: 'p@ssW0rd1'
+      - name: Checkout project
+        uses: actions/checkout@v2
+        repository: yukihiko-shinoda/staticpress
+        ref: '0.4.5'
+      - name: Back up environment variable
+        run: echo ::set-env name=BACKUP_GITHUB_REF::$(echo "${GITHUB_REF}")
+      - name: Overwrite deploy version
+        run: echo ::set-env name=GITHUB_REF::$(echo refs/tags/0.4.5)
+      - name: Deploy
+        uses: ./.github/actions/deploy/
         env:
           SVN_REPOSITORY_URL: svn://svn/project-in-svn
           SVN_USER_NAME: svn_user_name
-          SVN_USER_PASSWORD: p@ssW0rd2
+          SVN_USER_PASSWORD: p@ssW0rd
+      - name: Restore environment variable
+        run: echo ::set-env name=GITHUB_REF::$(echo "${BACKUP_GITHUB_REF}")
