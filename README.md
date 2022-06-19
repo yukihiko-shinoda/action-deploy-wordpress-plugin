@@ -3,15 +3,16 @@
 [![Test](https://github.com/yukihiko-shinoda/action-deploy-wordpress-plugin/workflows/Test/badge.svg)](https://github.com/yukihiko-shinoda/action-deploy-wordpress-plugin/actions?query=workflow%3ATest)
 [![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/futureys/deploy-wordpress-plugin.svg)](https://hub.docker.com/r/futureys/deploy-wordpress-plugin/builds)
 [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/futureys/deploy-wordpress-plugin.svg)](https://hub.docker.com/r/futureys/deploy-wordpress-plugin/builds)
-[![image size and number of layers](https://images.microbadger.com/badges/image/futureys/deploy-wordpress-plugin.svg)](https://hub.docker.com/r/futureys/deploy-wordpress-plugin/dockerfile)
+[![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/futureys/deploy-wordpress-plugin)](https://hub.docker.com/r/futureys/deploy-wordpress-plugin/dockerfile)
 [![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fyukihiko-shinoda%2Faction-deploy-wordpress-plugin)](http://twitter.com/share?text=Deploy%20WordPress%20plugin&url=https://github.com/marketplace/actions/deploy-wordpress-plugin&hashtags=wordpress)
 
-This is deployment action for WordPress Plugin
-from public Git repository to SubVersion on WordPress.org.
+This is deployment action for WordPress Plugin from Git repository to SubVersion on WordPress.org.
 
 ## requirement
 
-- Tagging revision on Git is done before deploy into WordPress.org
+Your WordPress Plugin project can accept that:
+
+- Tag revision on Git repository before deploy into WordPress.org
 - Tag name of revision on source Git repository to deploy is the same as version number of plugin’s main PHP file on tagged revision of source Git repository
 
 ## out of scope
@@ -54,35 +55,35 @@ jobs:
   build:
     name: Deploy WordPress plugin
     # 2. Specify Linux runner
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       # 3. Checkout before Use this deployment action
       - name: Checkout
-        uses: actions/checkout@v2
-      # 4. Use action with ssh password for workspace and environment varialble set by secrets
+        uses: actions/checkout@v3
+      # 4. Use action with environment variable set by secrets
       - name: Deploy
-        uses: yukihiko-shinoda/action-deploy-wordpress-plugin@v2.0.0
+        uses: yukihiko-shinoda/action-deploy-wordpress-plugin@v2
         env:
           SVN_REPOSITORY_URL: ${{ secrets.SvnRepositoryUrl }}
           SVN_USER_NAME: ${{ secrets.SvnUserName }}
           SVN_USER_PASSWORD: ${{ secrets.SvnUserPassword }}
 ```
 
-key point:
+### key point
 
-### 1. Triger by pushing tag
+#### 1. Trigger by pushing tag
 
 If you prefer, you can use [filter pattern](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet).
 
-### 2. Specify Linux runner
+#### 2. Specify Linux runner
 
-We recommends Linux runner. Windows and Mac also may use this action,
-however we are not running test on there environment to save running cost now.
+We recommend Linux runner. Windows and Mac also may use this action,
+however we are not running test on these environment to save testing cost now.
 
-### 3. Checkout before Use this deployment action
+#### 3. Checkout before Use this deployment action
 
 This deployment action assumes that the Git repository has been checked out.
 
-### 4. Use action with ssh password for workspace and environment varialble set by secrets
+#### 4. Use action with environment variable set by secrets
 
 In this example, environment variables are [presented by secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets). At least, you'd better to use secret for ```SVN_USER_NAME``` and ```SVN_USER_PASSWORD```.

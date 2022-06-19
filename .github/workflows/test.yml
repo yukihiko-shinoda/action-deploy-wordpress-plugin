@@ -10,7 +10,7 @@ jobs:
   test:
     strategy:
       matrix:
-        runs-on: [ubuntu-18.04, ubuntu-16.04]
+        runs-on: [ubuntu-20.04, ubuntu-18.04]
     runs-on: ${{ matrix.runs-on }}
     services:
       svn:
@@ -20,15 +20,15 @@ jobs:
           USER_1_PASS: p@ssW0rd
     steps:
       - name: Set deploy version
-        run: echo ::set-env name=EXPECT_DEPLOY_VERSION::$(echo ${GITHUB_REF#refs/tags/})
+        run: echo "EXPECT_DEPLOY_VERSION=$(echo ${GITHUB_REF#refs/tags/})" >> $GITHUB_ENV
 
       - name: Checkout project
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: yukihiko-shinoda/staticpress
           ref: '0.4.1'
       - name: Checkout action
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: ./.github/actions/deploy
       - name: Deploy
@@ -42,12 +42,12 @@ jobs:
           SVN_USER_PASSWORD: p@ssW0rd
 
       - name: Checkout project
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: yukihiko-shinoda/staticpress
           ref: '0.4.2'
       - name: Checkout action
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: ./.github/actions/deploy
       - name: Deploy
@@ -61,12 +61,12 @@ jobs:
           SVN_USER_PASSWORD: p@ssW0rd
 
       - name: Checkout project
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: yukihiko-shinoda/staticpress
           ref: '0.4.5'
       - name: Checkout action
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: ./.github/actions/deploy
       - name: Deploy
